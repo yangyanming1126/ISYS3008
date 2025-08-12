@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Your Visit</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="booking.html">Booking</a>
+  </nav>
+
+  <!-- Booking Section -->
+  <section id="booking">
+    <h2>Book Your Visit</h2>
+    <form id="booking-form">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="text" id="phone" placeholder="Your Phone" required />
+      <input type="date" id="date" required />
+      <select id="service_id" required>
+        <option value="">Select a Service</option>
+      </select>
+      <button type="submit">Submit Booking</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Contact us: sleepytiger@example.com | +61 400 123 456</p>
+    <p>&copy; 2025 Sleepy Tiger Resort Farmhouse</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
