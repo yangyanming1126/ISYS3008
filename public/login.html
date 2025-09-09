@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" data-page-title="login_title">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Sleepy Tiger Farmhouse</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+
+  <!-- Navigation Container -->
+  <div class="nav-container">
+    <!-- Top Navigation (Language Selector will be added here) -->
+    <div class="top-nav">
+      <!-- Language selector will be dynamically added here -->
+    </div>
+    
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+      <div class="nav-left">
+        <a href="index.html" data-translate="nav_home">Home</a>
+        <a href="services.html" data-translate="nav_services">Services</a>
+        <a href="booking.html" data-translate="nav_booking">Booking</a>
+      </div>
+      
+      <div class="nav-right">
+        <div class="auth-links">
+          <a href="login.html" data-translate="nav_login" class="active">Login</a>
+          <a href="register.html" data-translate="nav_register">Register</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Login Section -->
+  <section id="login" class="auth-section">
+    <div class="auth-container">
+      <h2 data-translate="login_title">Login to Your Account</h2>
+      
+      <form id="login-form" class="auth-form">
+        <div class="form-group">
+          <input 
+            type="text" 
+            id="username" 
+            data-translate="username_label"
+            placeholder="Username" 
+            required 
+          />
+        </div>
+        
+        <div class="form-group">
+          <input 
+            type="password" 
+            id="password" 
+            data-translate="password_label"
+            placeholder="Password" 
+            required 
+          />
+        </div>
+        
+        <button type="submit" class="btn-primary" data-translate="login_button">
+          Login
+        </button>
+      </form>
+      
+      <div class="auth-links">
+        <p>
+          <span data-translate="no_account">Don't have an account?</span>
+          <a href="register.html" data-translate="nav_register">Register</a>
+        </p>
+      </div>
+      
+      <div id="login-message" class="message"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p data-translate="contact_info">Contact us: sleepytiger@example.com | +61 400 123 456</p>
+    <p data-translate="copyright">&copy; 2025 Sleepy Tiger Resort Farmhouse</p>
+  </footer>
+
+  <script src="js/language-dict.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
