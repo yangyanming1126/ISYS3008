@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" data-page-title="admin_title">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Sleepy Tiger Farmhouse</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <script>
+    // Immediate admin check before page loads
+    (function() {
+      // Try to get user data from localStorage if available
+      const checkAdminAccess = async () => {
+        try {
+          const response = await fetch('/api/auth/check');
+          const data = await response.json();
+          
+          if (!data.authenticated || data.user.role !== 'admin') {
+            console.log('Not authenticated as admin, redirecting...');
+            window.location.href = 'login.html';
+          } else {
+            console.log('Admin access verified');
+          }
+        } catch (error) {
+          console.error('Admin check failed:', error);
+          window.location.href = 'login.html';
+        }
+      };
+      
+      checkAdminAccess();
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Navigation Container -->
+  <div class="nav-container">
+    <!-- Top Navigation (Language Selector will be added here) -->
+    <div class="top-nav">
+      <!-- Language selector will be dynamically added here -->
+    </div>
+    
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+      <div class="nav-left">
+        <a href="index.html" data-translate="nav_home">Home</a>
+        <a href="services.html" data-translate="nav_services">Services</a>
+        <a href="booking.html" data-translate="nav_booking">Booking</a>
+      </div>
+      
+      <div class="nav-right">
+        <div class="auth-links">
+          <a href="admin.html" data-translate="nav_admin" class="active">Admin</a>
+        </div>
+        <span id="user-info" class="user-info"></span>
+        <a href="#" id="logout-btn" data-translate="nav_logout">Logout</a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Admin Dashboard Section -->
+  <section id="admin" class="admin-section">
+    <div class="admin-container">
+      <h1 data-translate="admin_title">Admin Dashboard</h1>
+      
+      <!-- Dashboard Navigation -->
+      <div class="admin-nav">
+        <button id="users-tab" class="tab-button active" data-translate="manage_users">Manage Users</button>
+        <button id="bookings-tab" class="tab-button" data-translate="manage_bookings">Manage Bookings</button>
+        <button id="services-tab" class="tab-button" data-translate="manage_services">Manage Services</button>
+      </div>
+
+      <!-- Users Management Tab -->
+      <div id="users-panel" class="admin-panel active">
+        <div class="panel-header">
+          <h2 data-translate="manage_users">Manage Users</h2>
+          <button id="create-user-btn" class="btn-primary" data-translate="create">Create User</button>
+        </div>
+        
+        <div class="table-container">
+          <table id="users-table" class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th data-translate="username_label">Username</th>
+                <th data-translate="email_label">Email</th>
+                <th data-translate="first_name_label">Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7" data-translate="loading">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bookings Management Tab -->
+      <div id="bookings-panel" class="admin-panel">
+        <div class="panel-header">
+          <h2 data-translate="manage_bookings">Manage Bookings</h2>
+          <div class="filters">
+            <select id="booking-status-filter">
+              <option value="">All Statuses</option>
+              <option value="pending" data-translate="status_pending">Pending</option>
+              <option value="confirmed" data-translate="status_confirmed">Confirmed</option>
+              <option value="cancelled" data-translate="status_cancelled">Cancelled</option>
+              <option value="completed" data-translate="status_completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="table-container">
+          <table id="bookings-table" class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Service</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7" data-translate="loading">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Services Management Tab -->
+      <div id="services-panel" class="admin-panel">
+        <div class="panel-header">
+          <h2 data-translate="manage_services">Manage Services</h2>
+          <button id="create-service-btn" class="btn-primary" data-translate="create">Create Service</button>
+        </div>
+        
+        <div class="table-container">
+          <table id="services-table" class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name (EN)</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="6" data-translate="loading">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- User Modal -->
+  <div id="user-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="user-modal-title">Create/Edit User</h3>
+        <span class="close">&times;</span>
+      </div>
+      
+      <form id="user-form" class="modal-form">
+        <input type="hidden" id="user-id">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="user-username" data-translate="username_label">Username</label>
+            <input type="text" id="user-username" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="user-email" data-translate="email_label">Email</label>
+            <input type="email" id="user-email" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="user-first-name" data-translate="first_name_label">First Name</label>
+            <input type="text" id="user-first-name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="user-last-name" data-translate="last_name_label">Last Name</label>
+            <input type="text" id="user-last-name" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="user-password" data-translate="password_label">Password</label>
+          <input type="password" id="user-password">
+          <small>Leave blank to keep existing password</small>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="user-phone" data-translate="phone_label">Phone</label>
+            <input type="tel" id="user-phone">
+          </div>
+          
+          <div class="form-group">
+            <label for="user-role">Role</label>
+            <select id="user-role" required>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" data-translate="cancel">Cancel</button>
+          <button type="submit" class="btn-primary" data-translate="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div id="booking-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="booking-modal-title">Update Booking</h3>
+        <span class="close">&times;</span>
+      </div>
+      
+      <form id="booking-form" class="modal-form">
+        <input type="hidden" id="booking-id">
+        
+        <div class="form-group">
+          <label for="booking-status">Status</label>
+          <select id="booking-status" required>
+            <option value="pending" data-translate="status_pending">Pending</option>
+            <option value="confirmed" data-translate="status_confirmed">Confirmed</option>
+            <option value="cancelled" data-translate="status_cancelled">Cancelled</option>
+            <option value="completed" data-translate="status_completed">Completed</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="booking-notes">Notes</label>
+          <textarea id="booking-notes" rows="4"></textarea>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" data-translate="cancel">Cancel</button>
+          <button type="submit" class="btn-primary" data-translate="update">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p data-translate="contact_info">Contact us: sleepytiger@example.com | +61 400 123 456</p>
+    <p data-translate="copyright">&copy; 2025 Sleepy Tiger Resort Farmhouse</p>
+  </footer>
+
+  <script src="js/language-dict.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Wait for auth.js to fully initialize before loading admin.js
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if authManager is initialized
+      const checkAuthManager = () => {
+        if (window.authManager) {
+          console.log('Auth manager initialized, loading admin.js');
+          // Dynamically load admin.js
+          const adminScript = document.createElement('script');
+          adminScript.src = 'js/admin.js';
+          adminScript.onload = async () => {
+            console.log('admin.js loaded, initializing AdminManager...');
+            // Initialize AdminManager after script loads
+            if (window.AdminManager) {
+              try {
+                console.log('Creating AdminManager instance...');
+                window.adminManager = new window.AdminManager();
+                console.log('Calling AdminManager init...');
+                await window.adminManager.init();
+                console.log('AdminManager initialized successfully');
+              } catch (error) {
+                console.error('Error initializing AdminManager:', error);
+              }
+            } else {
+              console.error('AdminManager class not found in admin.js');
+            }
+          };
+          document.body.appendChild(adminScript);
+        } else {
+          console.log('Auth manager not yet initialized, waiting...');
+          setTimeout(checkAuthManager, 100);
+        }
+      };
+      
+      checkAuthManager();
+    });
+  </script>
+</body>
+</html>

@@ -1,40 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page-title="booking_title">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Book Your Visit</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Book Your Visit - Sleepy Tiger Farmhouse</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/booking.css" />
 </head>
 <body>
 
-  <!-- Top Navigation -->
-  <nav class="main-nav">
-    <a href="index.html">Home</a>
-    <a href="services.html">Services</a>
-    <a href="booking.html">Booking</a>
-  </nav>
+  <!-- Navigation Container -->
+  <div class="nav-container">
+    <!-- Top Navigation (Language Selector will be added here) -->
+    <div class="top-nav">
+      <!-- Language selector will be dynamically added here -->
+    </div>
+    
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+      <div class="nav-left">
+        <a href="index.html" data-translate="nav_home">Home</a>
+        <a href="services.html" data-translate="nav_services">Services</a>
+        <a href="booking.html" data-translate="nav_booking" class="active">Booking</a>
+      </div>
+      
+      <div class="nav-right">
+        <!-- Authentication Links -->
+        <div id="auth-links" class="auth-links">
+          <a href="login.html" id="login-link" data-translate="nav_login">Login</a>
+          <a href="register.html" id="register-link" data-translate="nav_register">Register</a>
+          <a href="profile.html" id="profile-link" data-translate="nav_profile" style="display: none;">Profile</a>
+        </div>
+        
+        <span id="user-info" class="user-info" style="display: none;"></span>
+        <a href="#" id="logout-btn" data-translate="nav_logout" style="display: none;">Logout</a>
+      </div>
+    </nav>
+  </div>
 
   <!-- Booking Section -->
   <section id="booking">
-    <h2>Book Your Visit</h2>
+    <h2 data-translate="booking_title">Book Your Visit</h2>
     <form id="booking-form">
-      <input type="text" id="name" placeholder="Your Name" required />
-      <input type="text" id="phone" placeholder="Your Phone" required />
-      <input type="date" id="date" required />
+      <input type="text" id="name" data-translate="form_name" placeholder="Your Name" required />
+      <input type="text" id="phone" data-translate="form_phone" placeholder="Your Phone" required />
+      <input type="date" id="date" data-translate="form_date" required />
       <select id="service_id" required>
-        <option value="">Select a Service</option>
+        <option value="" data-translate="form_service">Select a Service</option>
       </select>
-      <button type="submit">Submit Booking</button>
+      <textarea id="notes" data-translate="form_notes" placeholder="Additional Notes (Optional)"></textarea>
+      <button type="submit" data-translate="submit_booking">Submit Booking</button>
     </form>
   </section>
 
+  <!-- Payment Modal -->
+  <div id="payment-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 data-translate="payment_title">Complete Payment</h3>
+        <span class="close" id="payment-close">&times;</span>
+      </div>
+      
+      <div class="modal-body">
+        <div class="payment-info">
+          <h4 data-translate="service_label">Service:</h4>
+          <p id="payment-service-name"></p>
+          
+          <h4 data-translate="amount_label">Amount:</h4>
+          <p id="payment-amount" class="payment-amount-display">$0.00</p>
+          
+          <h4 data-translate="customer_info">Customer Information:</h4>
+          <p id="payment-customer-info"></p>
+        </div>
+        
+        <div class="payment-actions">
+          <button id="confirm-payment-btn" class="btn-pay" data-translate="confirm_payment">Confirm Payment</button>
+          <button id="cancel-payment-btn" class="btn-cancel" data-translate="cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer>
-    <p>Contact us: sleepytiger@example.com | +61 400 123 456</p>
-    <p>&copy; 2025 Sleepy Tiger Resort Farmhouse</p>
+    <p data-translate="contact_info">Contact us: sleepytiger@example.com | +61 400 123 456</p>
+    <p data-translate="copyright">&copy; 2025 Sleepy Tiger Resort Farmhouse</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="js/language-dict.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>

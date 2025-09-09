@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-page-title="profile_title">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - Sleepy Tiger Farmhouse</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+</head>
+<body>
+
+  <!-- Navigation Container -->
+  <div class="nav-container">
+    <!-- Top Navigation (Language Selector will be added here) -->
+    <div class="top-nav">
+      <!-- Language selector will be dynamically added here -->
+    </div>
+    
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+      <div class="nav-left">
+        <a href="index.html" data-translate="nav_home">Home</a>
+        <a href="services.html" data-translate="nav_services">Services</a>
+        <a href="booking.html" data-translate="nav_booking">Booking</a>
+      </div>
+      
+      <div class="nav-right">
+        <div class="auth-links">
+          <a href="profile.html" data-translate="nav_profile" class="active">Profile</a>
+        </div>
+        <span id="user-info" class="user-info"></span>
+        <a href="#" id="logout-btn" data-translate="nav_logout">Logout</a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Profile Section -->
+  <section id="profile" class="profile-section">
+    <div class="profile-container">
+      <h2 data-translate="profile_title">My Profile</h2>
+      
+      <!-- Profile Update Form -->
+      <div class="profile-form-container">
+        <h3 data-translate="update_profile">Update Profile</h3>
+        <form id="profile-form" class="profile-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profile_first_name" data-translate="first_name_label">First Name</label>
+              <input 
+                type="text" 
+                id="profile_first_name" 
+                required 
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="profile_last_name" data-translate="last_name_label">Last Name</label>
+              <input 
+                type="text" 
+                id="profile_last_name" 
+                required 
+              />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile_phone" data-translate="phone_label">Phone Number</label>
+            <input 
+              type="tel" 
+              id="profile_phone" 
+            />
+          </div>
+          
+          <button type="submit" class="btn-primary" data-translate="save">
+            Save
+          </button>
+        </form>
+        
+        <div id="profile-message" class="message"></div>
+      </div>
+
+      <!-- My Bookings Section -->
+      <div class="bookings-section">
+        <h3 data-translate="my_bookings">My Bookings</h3>
+        <div id="user-bookings" class="bookings-list">
+          <p data-translate="loading">Loading...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p data-translate="contact_info">Contact us: sleepytiger@example.com | +61 400 123 456</p>
+    <p data-translate="copyright">&copy; 2025 Sleepy Tiger Resort Farmhouse</p>
+  </footer>
+
+  <script src="js/language-dict.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>
