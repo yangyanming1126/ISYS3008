@@ -1,9 +1,10 @@
 {
   "name": "sleepy_tiger_farmhouse",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -11,8 +12,8 @@
   "description": "",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "express-session": "^1.17.3",
     "mysql2": "^3.14.3"
   }
 }
