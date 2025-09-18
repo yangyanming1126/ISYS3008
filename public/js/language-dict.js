@@ -68,6 +68,28 @@ const LANGUAGE_DICT = {
     ru: 'Забронировать'
   },
 
+  // Homepage Intro section
+  intro_title: {
+    en: 'Reconnect with Nature',
+    cn: '亲近自然',
+    ru: 'Снова соединиться с природой'
+  },
+  intro_paragraph: {
+    en: 'Escape the city hustle and enjoy our peaceful countryside retreat. Sleepy Tiger Resort offers a range of authentic rural experiences—from fruit picking to cozy farmhouse stays—all crafted with love.',
+    cn: '远离城市喧嚣，享受宁静的乡间度假。睡虎度假农庄提供从采摘水果到温馨民宿的丰富乡村体验，用真诚为你打造每一刻。',
+    ru: 'Уберите городской шум и насладитесь нашим тихим сельским отдыхом. В Sleepy Tiger Resort вас ждут подлинные сельские впечатления — от сбора фруктов до уютного проживания в фермерском доме — все создано с заботой.'
+  },
+  about_title: {
+    en: 'What Makes Us Unique',
+    cn: '我们的独特之处',
+    ru: 'Что делает нас особенными'
+  },
+  about_paragraph: {
+    en: 'At Sleepy Tiger, you\'ll do more than stay—you\'ll immerse yourself in farm life. From harvesting your own fruit to joining a morning feeding round, every moment is a memory in the making.',
+    cn: '在睡虎农庄，你不仅是入住，更是沉浸式体验农场生活。从亲自采摘水果到清晨参与喂养，每一刻都是值得珍藏的回忆。',
+    ru: 'В Sleepy Tiger вы не просто остановитесь — вы погрузитесь в жизнь фермы. От сбора собственных фруктов до утреннего кормления — каждый момент становится воспоминанием.'
+  },
+
   // Services Page
   services_title: {
     en: 'Our Services',
@@ -252,6 +274,11 @@ const LANGUAGE_DICT = {
     cn: '请登录以完成预订',
     ru: 'Пожалуйста, войдите, чтобы завершить бронирование'
   },
+  booking_details_title: {
+    en: 'Booking Details',
+    cn: '预订详情',
+    ru: 'Детали бронирования'
+  },
 
   // Admin Dashboard
   admin_title: {
@@ -274,6 +301,136 @@ const LANGUAGE_DICT = {
     cn: '服务管理',
     ru: 'Управление услугами'
   },
+  id_label: {
+    en: 'ID',
+    cn: 'ID',
+    ru: 'ID'
+  },
+  role_label: {
+    en: 'Role',
+    cn: '角色',
+    ru: 'Роль'
+  },
+  status_label: {
+    en: 'Status',
+    cn: '状态',
+    ru: 'Статус'
+  },
+  actions_label: {
+    en: 'Actions',
+    cn: '操作',
+    ru: 'Действия'
+  },
+  customer_label: {
+    en: 'Customer',
+    cn: '客户',
+    ru: 'Клиент'
+  },
+  service_label: {
+    en: 'Service',
+    cn: '服务',
+    ru: 'Услуга'
+  },
+  date_label: {
+    en: 'Date',
+    cn: '日期',
+    ru: 'Дата'
+  },
+  price_label: {
+    en: 'Price',
+    cn: '价格',
+    ru: 'Цена'
+  },
+  category_label: {
+    en: 'Category',
+    cn: '类别',
+    ru: 'Категория'
+  },
+  name_en_label: {
+    en: 'Name (EN)',
+    cn: '名称 (EN)',
+    ru: 'Название (EN)'
+  },
+  approve: {
+    en: 'Approve',
+    cn: '批准',
+    ru: 'Одобрить'
+  },
+  reject: {
+    en: 'Reject',
+    cn: '拒绝',
+    ru: 'Отклонить'
+  },
+  view: {
+    en: 'View',
+    cn: '查看',
+    ru: 'Просмотр'
+  },
+  complete: {
+    en: 'Complete',
+    cn: '完成',
+    ru: 'Завершить'
+  },
+  activate: {
+    en: 'Activate',
+    cn: '激活',
+    ru: 'Активировать'
+  },
+  deactivate: {
+    en: 'Deactivate',
+    cn: '停用',
+    ru: 'Деактивировать'
+  },
+  booking_id_label: {
+    en: 'Booking ID',
+    cn: '预订 ID',
+    ru: 'ID бронирования'
+  },
+  customer_name_label: {
+    en: 'Customer Name',
+    cn: '客户姓名',
+    ru: 'Имя клиента'
+  },
+  phone_label: {
+    en: 'Phone',
+    cn: '电话',
+    ru: 'Телефон'
+  },
+  username_label: {
+    en: 'Username',
+    cn: '用户名',
+    ru: 'Имя пользователя'
+  },
+  service_label: {
+    en: 'Service',
+    cn: '服务',
+    ru: 'Услуга'
+  },
+  date_label: {
+    en: 'Date',
+    cn: '日期',
+    ru: 'Дата'
+  },
+  status_label: {
+    en: 'Status',
+    cn: '状态',
+    ru: 'Статус'
+  },
+  notes_label: {
+    en: 'Notes',
+    cn: '备注',
+    ru: 'Заметки'
+  },
+  paid_amount_label: {
+    en: 'Paid Amount',
+    cn: '已付金额',
+    ru: 'Оплаченная сумма'
+  },
+  transaction_id_label: {
+    en: 'Transaction ID',
+    cn: '交易 ID',
+    ru: 'ID транзакции'
+  },
 
   // Status Labels
   status_pending: {
@@ -295,6 +452,126 @@ const LANGUAGE_DICT = {
     en: 'Completed',
     cn: '已完成',
     ru: 'Завершено'
+  },
+  status_refunded: {
+    en: 'Refunded',
+    cn: '已退款',
+    ru: 'Возвращено'
+  },
+  status_active: {
+    en: 'Active',
+    cn: '激活',
+    ru: 'Активный'
+  },
+  status_inactive: {
+    en: 'Inactive',
+    cn: '未激活',
+    ru: 'Неактивный'
+  },
+  role_admin: {
+    en: 'Admin',
+    cn: '管理员',
+    ru: 'Администратор'
+  },
+  role_user: {
+    en: 'User',
+    cn: '用户',
+    ru: 'Пользователь'
+  },
+  id_label: {
+    en: 'ID',
+    cn: 'ID',
+    ru: 'ID'
+  },
+  role_label: {
+    en: 'Role',
+    cn: '角色',
+    ru: 'Роль'
+  },
+  status_label: {
+    en: 'Status',
+    cn: '状态',
+    ru: 'Статус'
+  },
+  actions_label: {
+    en: 'Actions',
+    cn: '操作',
+    ru: 'Действия'
+  },
+  customer_label: {
+    en: 'Customer',
+    cn: '客户',
+    ru: 'Клиент'
+  },
+  service_label: {
+    en: 'Service',
+    cn: '服务',
+    ru: 'Услуга'
+  },
+  date_label: {
+    en: 'Date',
+    cn: '日期',
+    ru: 'Дата'
+  },
+  price_label: {
+    en: 'Price',
+    cn: '价格',
+    ru: 'Цена'
+  },
+  category_label: {
+    en: 'Category',
+    cn: '类别',
+    ru: 'Категория'
+  },
+  name_en_label: {
+    en: 'Name (EN)',
+    cn: '名称 (EN)',
+    ru: 'Название (EN)'
+  },
+  booking_id_label: {
+    en: 'Booking ID',
+    cn: '预订 ID',
+    ru: 'ID бронирования'
+  },
+  customer_name_label: {
+    en: 'Customer Name',
+    cn: '客户姓名',
+    ru: 'Имя клиента'
+  },
+  phone_label: {
+    en: 'Phone',
+    cn: '电话',
+    ru: 'Телефон'
+  },
+  notes_label: {
+    en: 'Notes',
+    cn: '备注',
+    ru: 'Заметки'
+  },
+  paid_amount_label: {
+    en: 'Paid Amount',
+    cn: '已付金额',
+    ru: 'Оплаченная сумма'
+  },
+  transaction_id_label: {
+    en: 'Transaction ID',
+    cn: '交易 ID',
+    ru: 'ID транзакции'
+  },
+  no_bookings_found: {
+    en: 'No bookings found',
+    cn: '未找到预订',
+    ru: 'Бронирования не найдены'
+  },
+  no_services_found: {
+    en: 'No services found',
+    cn: '未找到服务',
+    ru: 'Услуги не найдены'
+  },
+  no_users_found: {
+    en: 'No users found',
+    cn: '未找到用户',
+    ru: 'Пользователи не найдены'
   },
 
   // Common Actions
@@ -327,6 +604,36 @@ const LANGUAGE_DICT = {
     en: 'Update',
     cn: '更新',
     ru: 'Обновить'
+  },
+  approve: {
+    en: 'Approve',
+    cn: '批准',
+    ru: 'Одобрить'
+  },
+  reject: {
+    en: 'Reject',
+    cn: '拒绝',
+    ru: 'Отклонить'
+  },
+  view: {
+    en: 'View',
+    cn: '查看',
+    ru: 'Просмотр'
+  },
+  complete: {
+    en: 'Complete',
+    cn: '完成',
+    ru: 'Завершить'
+  },
+  activate: {
+    en: 'Activate',
+    cn: '激活',
+    ru: 'Активировать'
+  },
+  deactivate: {
+    en: 'Deactivate',
+    cn: '停用',
+    ru: 'Деактивировать'
   },
 
   // Messages
@@ -373,6 +680,222 @@ const LANGUAGE_DICT = {
     en: 'Русский',
     cn: 'Русский', 
     ru: 'Русский'
+  },
+  
+  // Admin Dashboard
+  admin_title: {
+    en: 'Admin Dashboard',
+    cn: '管理控制台',
+    ru: 'Панель администратора'
+  },
+  manage_users: {
+    en: 'Manage Users',
+    cn: '用户管理',
+    ru: 'Управление пользователями'
+  },
+  manage_bookings: {
+    en: 'Manage Bookings',
+    cn: '预订管理',
+    ru: 'Управление бронированием'
+  },
+  manage_services: {
+    en: 'Manage Services',
+    cn: '服务管理',
+    ru: 'Управление услугами'
+  },
+  
+  // Table Headers
+  id_label: {
+    en: 'ID',
+    cn: 'ID',
+    ru: 'ID'
+  },
+  role_label: {
+    en: 'Role',
+    cn: '角色',
+    ru: 'Роль'
+  },
+  status_label: {
+    en: 'Status',
+    cn: '状态',
+    ru: 'Статус'
+  },
+  actions_label: {
+    en: 'Actions',
+    cn: '操作',
+    ru: 'Действия'
+  },
+  customer_label: {
+    en: 'Customer',
+    cn: '客户',
+    ru: 'Клиент'
+  },
+  service_label: {
+    en: 'Service',
+    cn: '服务',
+    ru: 'Услуга'
+  },
+  date_label: {
+    en: 'Date',
+    cn: '日期',
+    ru: 'Дата'
+  },
+  price_label: {
+    en: 'Price',
+    cn: '价格',
+    ru: 'Цена'
+  },
+  category_label: {
+    en: 'Category',
+    cn: '类别',
+    ru: 'Категория'
+  },
+  name_en_label: {
+    en: 'Name (EN)',
+    cn: '名称 (EN)',
+    ru: 'Название (EN)'
+  },
+  
+  // Action Buttons
+  approve: {
+    en: 'Approve',
+    cn: '批准',
+    ru: 'Одобрить'
+  },
+  reject: {
+    en: 'Reject',
+    cn: '拒绝',
+    ru: 'Отклонить'
+  },
+  view: {
+    en: 'View',
+    cn: '查看',
+    ru: 'Просмотр'
+  },
+  complete: {
+    en: 'Complete',
+    cn: '完成',
+    ru: 'Завершить'
+  },
+  activate: {
+    en: 'Activate',
+    cn: '激活',
+    ru: 'Активировать'
+  },
+  deactivate: {
+    en: 'Deactivate',
+    cn: '停用',
+    ru: 'Деактивировать'
+  },
+  
+  // Status Labels
+  status_pending: {
+    en: 'Pending',
+    cn: '待处理',
+    ru: 'В ожидании'
+  },
+  status_confirmed: {
+    en: 'Confirmed',
+    cn: '已确认',
+    ru: 'Подтверждено'
+  },
+  status_cancelled: {
+    en: 'Cancelled',
+    cn: '已取消',
+    ru: 'Отменено'
+  },
+  status_completed: {
+    en: 'Completed',
+    cn: '已完成',
+    ru: 'Завершено'
+  },
+  status_refunded: {
+    en: 'Refunded',
+    cn: '已退款',
+    ru: 'Возвращено'
+  },
+  status_active: {
+    en: 'Active',
+    cn: '激活',
+    ru: 'Активный'
+  },
+  status_inactive: {
+    en: 'Inactive',
+    cn: '未激活',
+    ru: 'Неактивный'
+  },
+  
+  // Filter Options
+  all_statuses: {
+    en: 'All Statuses',
+    cn: '所有状态',
+    ru: 'Все статусы'
+  },
+  
+  // Role Labels
+  role_admin: {
+    en: 'Admin',
+    cn: '管理员',
+    ru: 'Администратор'
+  },
+  role_user: {
+    en: 'User',
+    cn: '用户',
+    ru: 'Пользователь'
+  },
+  
+  // Booking Details Modal
+  booking_details_title: {
+    en: 'Booking Details',
+    cn: '预订详情',
+    ru: 'Детали бронирования'
+  },
+  booking_id_label: {
+    en: 'Booking ID',
+    cn: '预订 ID',
+    ru: 'ID бронирования'
+  },
+  customer_name_label: {
+    en: 'Customer Name',
+    cn: '客户姓名',
+    ru: 'Имя клиента'
+  },
+  phone_label: {
+    en: 'Phone',
+    cn: '电话',
+    ru: 'Телефон'
+  },
+  notes_label: {
+    en: 'Notes',
+    cn: '备注',
+    ru: 'Заметки'
+  },
+  paid_amount_label: {
+    en: 'Paid Amount',
+    cn: '已付金额',
+    ru: 'Оплаченная сумма'
+  },
+  transaction_id_label: {
+    en: 'Transaction ID',
+    cn: '交易 ID',
+    ru: 'ID транзакции'
+  },
+  
+  // No Data Messages
+  no_bookings_found: {
+    en: 'No bookings found',
+    cn: '未找到预订',
+    ru: 'Бронирования не найдены'
+  },
+  no_services_found: {
+    en: 'No services found',
+    cn: '未找到服务',
+    ru: 'Услуги не найдены'
+  },
+  no_users_found: {
+    en: 'No users found',
+    cn: '未找到用户',
+    ru: 'Пользователи не найдены'
   }
 };
 

@@ -177,8 +177,7 @@ class AuthManager {
     const formData = {
       first_name: document.getElementById('profile_first_name').value,
       last_name: document.getElementById('profile_last_name').value,
-      phone: document.getElementById('profile_phone').value,
-      preferred_language: document.getElementById('profile_language').value
+      phone: document.getElementById('profile_phone').value
     };
     
     const messageDiv = document.getElementById('profile-message');
@@ -194,14 +193,10 @@ class AuthManager {
       
       if (data.success) {
         // Update current user data
-        this.currentUser.first_name = formData.first_name;
-        this.currentUser.last_name = formData.last_name;
-        this.currentUser.preferred_language = formData.preferred_language;
-        window.currentUser = this.currentUser;
-        
-        // Update language if changed
-        if (window.languageManager) {
-          window.languageManager.setLanguage(formData.preferred_language);
+        if (this.currentUser) {
+          this.currentUser.first_name = formData.first_name;
+          this.currentUser.last_name = formData.last_name;
+          window.currentUser = this.currentUser;
         }
         
         this.showMessage(messageDiv, window.t('success_message') || 'Profile updated successfully!', 'success');
@@ -220,7 +215,7 @@ class AuthManager {
     const authLinks = document.querySelector('.auth-links');
     const loginLink = document.getElementById('login-link');
     const registerLink = document.getElementById('register-link');
-    const profileLink = document.getElementById('profile-link');
+    const profileBtn = document.getElementById('profile-btn');
     
     if (this.currentUser) {
       // Hide login/register links
@@ -228,9 +223,9 @@ class AuthManager {
         authLinks.style.display = 'none';
       }
       
-      // Show profile link
-      if (profileLink) {
-        profileLink.style.display = 'inline';
+      // Show profile button
+      if (profileBtn) {
+        profileBtn.style.display = 'inline-flex';
       }
       
       // Show user info and logout
@@ -253,9 +248,9 @@ class AuthManager {
         authLinks.style.display = 'flex';
       }
       
-      // Hide profile link
-      if (profileLink) {
-        profileLink.style.display = 'none';
+      // Hide profile button
+      if (profileBtn) {
+        profileBtn.style.display = 'none';
       }
       
       if (userInfo) {
