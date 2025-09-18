@@ -63,7 +63,8 @@ router.post('/', async (req, res) => {
 router.get('/my', requireAuth, async (req, res) => {
   try {
     const [bookings] = await db.query(`
-      SELECT b.*, COALESCE(s.name_en, s.name_cn, s.name_ru) as service_name, s.price as service_price, COALESCE(s.category_en, s.category_cn, s.category_ru) as category,
+      SELECT b.*, s.name_en as service_name_en, s.name_cn as service_name_cn, s.name_ru as service_name_ru, 
+             s.price as service_price, s.category_en as category_en, s.category_cn as category_cn, s.category_ru as category_ru,
              p.amount as paid_amount, p.status as payment_status, p.transaction_id
       FROM bookings b 
       JOIN services s ON b.service_id = s.id 

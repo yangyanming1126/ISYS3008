@@ -2,7 +2,6 @@ const express = require('express');
 const db = require('../db');
 const router = express.Router();
 
-// Authentication middleware
 function requireAuth(req, res, next) {
   if (req.session && req.session.user) {
     next();

@@ -57,10 +57,10 @@ router.post('/process', requireAuth, async (req, res) => {
       [booking_id, booking.service_price, 'AUD', payment_method || 'virtual', transactionId, 'completed']
     );
     
-    // Update booking with payment_id
+    // Update booking with payment_id and set status to pending
     await db.query(
       'UPDATE bookings SET payment_id = ?, status = ? WHERE id = ?',
-      [paymentResult.insertId, 'confirmed', booking_id]
+      [paymentResult.insertId, 'pending', booking_id]
     );
     
     res.json({ 

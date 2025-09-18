@@ -141,12 +141,100 @@ router.put('/bookings/:id', requireAdmin, async (req, res) => {
   }
 });
 
+// Approve pending booking (Admin only)
+router.post('/bookings/:id/approve', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    // First, check if the booking is in pending status
+    const [bookings] = await db.query('SELECT * FROM bookings WHERE id = ? AND status = ?', [id, 'pending']);
+    
+    if (bookings.length === 0) {
+      return res.status(404).json({ error: 'Pending booking not found' });
+    }
+    
+    // Update booking status to confirmed
+    const [result] = await db.query(
+      'UPDATE bookings SET status = ? WHERE id = ?',
+      ['confirmed', id]
+    );
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+    
+    res.json({ success: true, message: 'Booking approved successfully' });
+  } catch (error) {
+    console.error('Booking approval error:', error);
+    res.status(500).json({ error: 'Failed to approve booking' });
+  }
+});
+
+// Reject pending booking (Admin only)
+router.post('/bookings/:id/reject', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    // First, check if the booking is in pending status
+    const [bookings] = await db.query('SELECT * FROM bookings WHERE id = ? AND status = ?', [id, 'pending']);
+    
+    if (bookings.length === 0) {
+      return res.status(404).json({ error: 'Pending booking not found' });
+    }
+    
+    // Update booking status to refunded
+    const [result] = await db.query(
+      'UPDATE bookings SET status = ? WHERE id = ?',
+      ['refunded', id]
+    );
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+    
+    res.json({ success: true, message: 'Booking rejected successfully' });
+  } catch (error) {
+    console.error('Booking rejection error:', error);
+    res.status(500).json({ error: 'Failed to reject booking' });
+  }
+});
+
+// Complete confirmed booking (Admin only)
+router.post('/bookings/:id/complete', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    // First, check if the booking is in confirmed status
+    const [bookings] = await db.query('SELECT * FROM bookings WHERE id = ? AND status = ?', [id, 'confirmed']);
+    
+    if (bookings.length === 0) {
+      return res.status(404).json({ error: 'Confirmed booking not found' });
+    }
+    
+    // Update booking status to completed
+    const [result] = await db.query(
+      'UPDATE bookings SET status = ? WHERE id = ?',
+      ['completed', id]
+    );
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+    
+    res.json({ success: true, message: 'Booking marked as completed successfully' });
+  } catch (error) {
+    console.error('Booking completion error:', error);
+    res.status(500).json({ error: 'Failed to mark booking as completed' });
+  }
+});
+
 // Get all services (Admin only)
 router.get('/services', requireAdmin, async (req, res) => {
   try {
     const [services] = await db.query(`
       SELECT s.*, 
              COALESCE(s.name_en, s.name_cn, s.name_ru) as display_name,
+             COALESCE(s.category_en, s.category_cn, s.category_ru) as display_category,
              COALESCE(s.description_en, s.description_cn, s.description_ru) as display_description,
              (SELECT COUNT(*) FROM bookings WHERE service_id = s.id) as booking_count
       FROM services s
