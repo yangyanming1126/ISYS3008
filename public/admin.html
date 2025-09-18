@@ -51,9 +51,7 @@
       </div>
       
       <div class="nav-right">
-        <div class="auth-links">
-          <a href="admin.html" data-translate="nav_admin" class="active">Admin</a>
-        </div>
+        <a href="profile.html" id="profile-btn" class="profile-btn" style="display: none;" data-translate="nav_profile">Profile</a>
         <span id="user-info" class="user-info"></span>
         <a href="#" id="logout-btn" data-translate="nav_logout">Logout</a>
       </div>
@@ -83,13 +81,13 @@
           <table id="users-table" class="admin-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th data-translate="id_label">ID</th>
                 <th data-translate="username_label">Username</th>
                 <th data-translate="email_label">Email</th>
                 <th data-translate="first_name_label">Name</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th data-translate="role_label">Role</th>
+                <th data-translate="status_label">Status</th>
+                <th data-translate="actions_label">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -107,10 +105,10 @@
           <h2 data-translate="manage_bookings">Manage Bookings</h2>
           <div class="filters">
             <select id="booking-status-filter">
-              <option value="">All Statuses</option>
+              <option value="" data-translate="all_statuses">All Statuses</option>
               <option value="pending" data-translate="status_pending">Pending</option>
               <option value="confirmed" data-translate="status_confirmed">Confirmed</option>
-              <option value="cancelled" data-translate="status_cancelled">Cancelled</option>
+              <option value="refunded" data-translate="status_refunded">Refunded</option>
               <option value="completed" data-translate="status_completed">Completed</option>
             </select>
           </div>
@@ -120,13 +118,12 @@
           <table id="bookings-table" class="admin-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>Service</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Payment</th>
-                <th>Actions</th>
+                <th data-translate="id_label">ID</th>
+                <th data-translate="customer_label">Customer</th>
+                <th data-translate="service_label">Service</th>
+                <th data-translate="date_label">Date</th>
+                <th data-translate="status_label">Status</th>
+                <th data-translate="actions_label">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -149,12 +146,12 @@
           <table id="services-table" class="admin-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Name (EN)</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th data-translate="id_label">ID</th>
+                <th data-translate="name_en_label">Name (EN)</th>
+                <th data-translate="category_label">Category</th>
+                <th data-translate="price_label">Price</th>
+                <th data-translate="status_label">Status</th>
+                <th data-translate="actions_label">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -266,6 +263,96 @@
     </div>
   </div>
 
+  <!-- Service Modal -->
+  <div id="service-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="service-modal-title">Create/Edit Service</h3>
+        <span class="close">&times;</span>
+      </div>
+      
+      <form id="service-form" class="modal-form">
+        <input type="hidden" id="service-id">
+        
+        <!-- English Fields -->
+        <h4>English</h4>
+        <div class="form-group">
+          <label for="service-name-en">Name (English)</label>
+          <input type="text" id="service-name-en" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="service-description-en">Description (English)</label>
+          <textarea id="service-description-en" rows="3" required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="service-category-en">Category (English)</label>
+          <input type="text" id="service-category-en" required>
+        </div>
+        
+        <!-- Chinese Fields -->
+        <h4>中文</h4>
+        <div class="form-group">
+          <label for="service-name-cn">Name (中文)</label>
+          <input type="text" id="service-name-cn">
+        </div>
+        
+        <div class="form-group">
+          <label for="service-description-cn">Description (中文)</label>
+          <textarea id="service-description-cn" rows="3"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="service-category-cn">Category (中文)</label>
+          <input type="text" id="service-category-cn">
+        </div>
+        
+        <!-- Russian Fields -->
+        <h4>Русский</h4>
+        <div class="form-group">
+          <label for="service-name-ru">Name (Русский)</label>
+          <input type="text" id="service-name-ru">
+        </div>
+        
+        <div class="form-group">
+          <label for="service-description-ru">Description (Русский)</label>
+          <textarea id="service-description-ru" rows="3"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="service-category-ru">Category (Русский)</label>
+          <input type="text" id="service-category-ru">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="service-price">Price</label>
+            <input type="number" id="service-price" step="0.01" min="0" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="service-image-url">Image URL</label>
+            <input type="text" id="service-image-url">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="service-status">Status</label>
+          <select id="service-status" required>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" data-translate="cancel">Cancel</button>
+          <button type="submit" class="btn-primary" data-translate="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer>
     <p data-translate="contact_info">Contact us: sleepytiger@example.com | +61 400 123 456</p>
@@ -274,6 +361,9 @@
 
   <script src="js/language-dict.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/users-management.js"></script>
+  <script src="js/bookings-management.js"></script>
+  <script src="js/services-management.js"></script>
   <script>
     // Wait for auth.js to fully initialize before loading admin.js
     document.addEventListener('DOMContentLoaded', () => {
