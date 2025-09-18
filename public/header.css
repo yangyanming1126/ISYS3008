@@ -66,6 +66,19 @@
   font-size: 14px;
 }
 
+.profile-btn {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 15px;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.profile-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 @media (max-width: 768px) {
   .main-nav {
     flex-direction: column;
@@ -81,10 +94,6 @@
     text-align: center;
   }
 }
-
-/* ====================================
-   NAVIGATION ENHANCEMENTS
-   ==================================== */
 
 .main-nav {
   display: flex;

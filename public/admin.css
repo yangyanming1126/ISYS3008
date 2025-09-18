@@ -117,6 +117,11 @@
   border-bottom: 1px solid #e9ecef;
   font-size: 14px;
   vertical-align: middle;
+  display: table-cell;
+}
+
+.admin-table tr {
+  height: 60px;
 }
 
 .admin-table tr:hover {
@@ -132,11 +137,17 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-items: center;
+  height: 100%;
 }
 
 .btn-edit,
 .btn-delete,
-.btn-activate {
+.btn-activate,
+.btn-approve,
+.btn-reject,
+.btn-view,
+.btn-complete {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -173,6 +184,42 @@
   background: #218838;
 }
 
+.btn-approve {
+  background: #28a745;
+  color: white;
+}
+
+.btn-approve:hover {
+  background: #218838;
+}
+
+.btn-reject {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-reject:hover {
+  background: #c82333;
+}
+
+.btn-view {
+  background: #17a2b8;
+  color: white;
+}
+
+.btn-view:hover {
+  background: #138496;
+}
+
+.btn-complete {
+  background: #28a745;
+  color: white;
+}
+
+.btn-complete:hover {
+  background: #218838;
+}
+
 /* Status and Role Badges */
 .role-badge,
 .status-badge {
@@ -203,6 +250,32 @@
   color: #721c24;
 }
 
+/* Booking Status Badges */
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-confirmed {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-completed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-refunded {
+  background: #f8d7da;
+  color: #721c24;
+}
+
 /* ====================================
    MODAL STYLES
    ==================================== */
@@ -228,6 +301,9 @@
   max-width: 600px;
   box-shadow: 0 15px 30px rgba(0,0,0,0.2);
   animation: modalSlideIn 0.3s ease;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes modalSlideIn {
@@ -249,6 +325,7 @@
   border-bottom: 1px solid #e1e5e9;
   background: #f8f9fa;
   border-radius: 12px 12px 0 0;
+  flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -281,10 +358,14 @@
   padding: 25px;
   max-width: 100%;
   margin: 0;
+  overflow-y: auto;
+  flex: 1;
 }
+
 
 .modal-form .form-group {
   margin-bottom: 20px;
+  width: 450px;
 }
 
 .modal-form label {
@@ -330,9 +411,9 @@
   display: flex;
   justify-content: flex-end;
   gap: 15px;
-  padding-top: 20px;
+  padding: 20px 25px;
   border-top: 1px solid #e1e5e9;
-  margin-top: 20px;
+  flex-shrink: 0;
 }
 
 .btn-secondary {
@@ -350,9 +431,6 @@
   background: #5a6268;
 }
 
-/* ====================================
-   ADMIN RESPONSIVE DESIGN
-   ==================================== */
 
 @media (max-width: 1024px) {
   .admin-container {
@@ -413,5 +491,49 @@
   
   .modal-form .form-row {
     flex-direction: column;
+  }
+}
+
+/* Booking Details Modal */
+#booking-details-modal .modal-content {
+  max-width: 500px;
+}
+
+.booking-details {
+  padding: 30px;
+}
+
+.booking-details .detail-row {
+  display: flex;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.booking-details .detail-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.booking-details .detail-label {
+  font-weight: 600;
+  color: #555;
+  width: 150px;
+  flex-shrink: 0;
+}
+
+.booking-details .detail-value {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .booking-details .detail-row {
+    flex-direction: column;
+  }
+  
+  .booking-details .detail-label {
+    width: 100%;
+    margin-bottom: 5px;
   }
 }

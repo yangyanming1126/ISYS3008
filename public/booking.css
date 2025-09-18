@@ -4,6 +4,44 @@
   text-align: center;
 }
 
+#booking-form {
+  max-width: 420px; 
+  margin: 0 auto;  
+}
+
+#booking-form input[type="text"],
+#booking-form input[type="date"],
+#booking-form select,
+#booking-form textarea,
+#booking-form button[type="submit"] {
+  box-sizing: border-box;
+  width: 100%;
+  display: block;
+  margin: 10px auto; 
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+#booking-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+#booking-form button[type="submit"] {
+  background-color: #007B5E;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 600;
+}
+
+#booking-form button[type="submit"]:hover {
+  background-color: #005a45;
+}
+
 /* === Service Category Title Styles === */
 #booking h3 {
   margin-top: 40px;
@@ -26,7 +64,6 @@
   box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
 
-/* === Payment Modal Styles === */
 .modal {
   position: fixed;
   z-index: 1000;

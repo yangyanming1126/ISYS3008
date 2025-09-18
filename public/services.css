@@ -1,0 +1,83 @@
+/* === Services Page === */
+#services {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+#services h3 {
+  margin-top: 40px;
+  font-size: 1.6em;
+  color: #007B5E;
+}
+
+#services h4 {
+  margin-bottom: 5px;
+}
+
+.service-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 15px auto;
+  width: 95%;
+  max-width: 600px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  text-align: left;
+}
+
+@media (max-width: 576px) {
+  #services {
+    padding: 20px 10px;
+  }
+  
+  .service-card {
+    width: 95%;
+    padding: 15px;
+    margin: 10px auto;
+  }
+  
+  #services h3 {
+    font-size: 1.4em;
+    margin-top: 30px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .service-card {
+    width: 90%;
+    max-width: 650px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .service-card {
+    width: 85%;
+    max-width: 700px;
+  }
+}
+
+@media (min-width: 993px) {
+  #services {
+    padding: 50px 30px;
+  }
+  
+  .service-card {
+    width: 80%;
+    max-width: 800px;
+    padding: 25px;
+  }
+  
+  #services h3 {
+    font-size: 1.8em;
+    margin-top: 50px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .service-card {
+    width: 75%;
+    max-width: 900px;
+    padding: 30px;
+  }
+}
