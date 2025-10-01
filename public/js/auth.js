@@ -18,6 +18,14 @@ class AuthManager {
     }
     this.bindEvents();
     this.updateNavigation();
+    
+    // Initialize phone hint on register page
+    if (document.getElementById('register-form')) {
+      // Wait a bit for translations to load
+      setTimeout(() => {
+        this.updatePhoneHint();
+      }, 100);
+    }
   }
 
   async checkAuthStatus() {
@@ -37,11 +45,102 @@ class AuthManager {
         this.currentUser = null;
         window.currentUser = null;
       }
+      
+      // Dispatch event to notify that auth status check is complete
+      document.dispatchEvent(new CustomEvent('authStatusChecked'));
     } catch (error) {
       console.error('Auth check failed:', error);
       this.currentUser = null;
       window.currentUser = null;
+      // Dispatch event even if check fails
+      document.dispatchEvent(new CustomEvent('authStatusChecked'));
     }
+  }
+
+  // Validate phone number based on country
+  validatePhoneNumber(phone, country) {
+    // Remove spaces and dashes but keep +
+    const cleaned = phone.replace(/[\s\-]/g, '');
+    
+    switch (country) {
+      case 'AU': // Australia: 10 digits, starts with 04 or 05 (mobile) or +61 4/5
+        return /^0[45]\d{8}$/.test(cleaned) || /^\+61[45]\d{8}$/.test(cleaned);
+      case 'CN': // China: 11 digits, starts with 1 and second digit 3-9
+        return /^1[3-9]\d{9}$/.test(cleaned) || /^\+861[3-9]\d{9}$/.test(cleaned);
+      case 'RU': // Russia: 10 digits, starts with 9 (mobile) or +7 9
+        return /^[9]\d{9}$/.test(cleaned) || /^\+79\d{9}$/.test(cleaned);
+      default:
+        // For other countries, basic validation
+        const digitsOnly = cleaned.replace(/\D/g, '');
+        return digitsOnly.length >= 7 && digitsOnly.length <= 15;
+    }
+  }
+
+  // Format phone number with country code prefix
+  formatPhoneNumberWithCountryCode(phone, country) {
+    // Remove spaces and dashes but keep +
+    let cleaned = phone.replace(/[\s\-]/g, '');
+    
+    switch (country) {
+      case 'AU': // Australia
+        // Handle different input formats
+        if (cleaned.startsWith('+61')) {
+          return cleaned;
+        } else if (cleaned.startsWith('61')) {
+          return '+' + cleaned;
+        } else if (cleaned.startsWith('0')) {
+          return '+61' + cleaned.substring(1);
+        } else {
+          return '+61' + cleaned;
+        }
+      case 'CN': // China
+        if (cleaned.startsWith('+86')) {
+          return cleaned;
+        } else if (cleaned.startsWith('86')) {
+          return '+' + cleaned;
+        } else {
+          return '+86' + cleaned;
+        }
+      case 'RU': // Russia
+        if (cleaned.startsWith('+7')) {
+          return cleaned;
+        } else if (cleaned.startsWith('7')) {
+          return '+' + cleaned;
+        } else {
+          return '+7' + cleaned;
+        }
+      default:
+        // For other countries, just ensure it has a +
+        return phone.startsWith('+') ? phone : '+' + phone;
+    }
+  }
+
+  // Update phone format hint based on selected country
+  updatePhoneHint() {
+    const countrySelect = document.getElementById('country');
+    const hintElement = document.getElementById('phone-format-hint');
+    
+    if (!countrySelect || !hintElement) return;
+    
+    const country = countrySelect.value;
+    let hintText = '';
+    
+    switch (country) {
+      case 'AU':
+        hintText = window.t('phone_hint_au') || 'Australian phone number (10 digits, e.g., 0400123456)';
+        break;
+      case 'CN':
+        hintText = window.t('phone_hint_cn') || 'Chinese phone number (11 digits, e.g., 13812345678)';
+        break;
+      case 'RU':
+        hintText = window.t('phone_hint_ru') || 'Russian phone number (10 digits, e.g., 9123456789)';
+        break;
+      default:
+        hintText = '';
+    }
+    
+    hintElement.textContent = hintText;
+    hintElement.style.display = hintText ? 'block' : 'none';
   }
 
   bindEvents() {
@@ -55,6 +154,12 @@ class AuthManager {
     const registerForm = document.getElementById('register-form');
     if (registerForm) {
       registerForm.addEventListener('submit', (e) => this.handleRegister(e));
+      
+      // Add event listener for country selection
+      const countrySelect = document.getElementById('country');
+      if (countrySelect) {
+        countrySelect.addEventListener('change', () => this.updatePhoneHint());
+      }
     }
 
     // Logout button
@@ -117,18 +222,35 @@ class AuthManager {
   async handleRegister(e) {
     e.preventDefault();
     
+    // Get form elements
+    const countrySelect = document.getElementById('country');
+    const phoneInput = document.getElementById('phone');
+    const messageDiv = document.getElementById('register-message');
+    
+    // Validate phone number based on selected country
+    if (countrySelect.value && phoneInput.value) {
+      if (!this.validatePhoneNumber(phoneInput.value, countrySelect.value)) {
+        this.showMessage(messageDiv, window.t('phone_format_error') || 'Please enter a valid phone number for the selected country', 'error');
+        return;
+      }
+    }
+    
+    // Format phone number with country code prefix
+    let formattedPhone = phoneInput.value;
+    if (countrySelect.value && phoneInput.value) {
+      formattedPhone = this.formatPhoneNumberWithCountryCode(phoneInput.value, countrySelect.value);
+    }
+    
     const formData = {
       username: document.getElementById('username').value,
       email: document.getElementById('email').value,
       password: document.getElementById('password').value,
       first_name: document.getElementById('first_name').value,
       last_name: document.getElementById('last_name').value,
-      phone: document.getElementById('phone').value,
+      phone: formattedPhone,
       preferred_language: document.getElementById('preferred_language')?.value || 'en'
     };
     
-    const messageDiv = document.getElementById('register-message');
-
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
