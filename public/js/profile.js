@@ -21,6 +21,8 @@ class ProfileManager {
       if (response.ok) {
         const data = await response.json();
         this.populateProfileForm(data.user);
+        // Show email verification section
+        this.showEmailVerificationSection(data.user);
       } else {
         console.error('Failed to load profile');
       }
@@ -50,6 +52,29 @@ class ProfileManager {
     }
   }
 
+  showEmailVerificationSection(user) {
+    const verificationSection = document.getElementById('email-verification-section');
+    const verificationStatus = document.getElementById('email-verification-status');
+    
+    if (verificationSection && verificationStatus) {
+      // Show the section
+      verificationSection.style.display = 'block';
+      
+      // Update status text and class
+      if (user.is_email_verified) {
+        verificationStatus.textContent = window.t('email_verified') || 'Your email is verified';
+        verificationStatus.className = 'verification-status verified';
+        // Hide the send button if email is already verified
+        document.getElementById('send-verification-btn').style.display = 'none';
+      } else {
+        verificationStatus.textContent = window.t('email_not_verified') || 'Your email is not verified';
+        verificationStatus.className = 'verification-status unverified';
+        // Show the send button if email is not verified
+        document.getElementById('send-verification-btn').style.display = 'block';
+      }
+    }
+  }
+
   async loadUserBookings() {
     const bookingsContainer = document.getElementById('user-bookings');
     
@@ -61,6 +86,13 @@ class ProfileManager {
       if (response.ok) {
         const bookings = await response.json();
         this.displayBookings(bookings, bookingsContainer);
+      } else if (response.status === 403) {
+        // User is not verified, show a message
+        bookingsContainer.innerHTML = '<p data-translate="email_not_verified_bookings">Please verify your email to access your bookings.</p>';
+        // Translate the new content
+        if (window.languageManager) {
+          window.languageManager.translatePage();
+        }
       } else {
         bookingsContainer.innerHTML = '<p>Failed to load bookings</p>';
       }
@@ -168,9 +200,48 @@ class ProfileManager {
     });
   }
   
+  async sendVerificationEmail() {
+    const verificationBtn = document.getElementById('send-verification-btn');
+    const verificationMessage = document.getElementById('verification-message');
+    
+    // Disable button and show loading state
+    verificationBtn.disabled = true;
+    verificationBtn.textContent = window.t('sending_verification') || 'Sending...';
+    
+    try {
+      const response = await fetch('/api/auth/send-verification-email', {
+        method: 'POST'
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        verificationMessage.innerHTML = `<p style="color: green;">${window.t('verification_sent') || 'Verification email sent successfully! Please check your inbox.'}</p>`;
+      } else {
+        verificationMessage.innerHTML = `<p style="color: red;">${data.error || (window.t('verification_failed') || 'Failed to send verification email')}</p>`;
+      }
+    } catch (error) {
+      console.error('Send verification email error:', error);
+      verificationMessage.innerHTML = `<p style="color: red;">${window.t('verification_failed') || 'Failed to send verification email'}</p>`;
+    } finally {
+      // Re-enable button
+      verificationBtn.disabled = false;
+      verificationBtn.textContent = window.t('send_verification_email') || 'Send Verification Email';
+    }
+  }
+  
   bindEvents() {
     // Profile form is handled by auth.js
     // Any additional profile-specific events can be added here
+    
+    // Add event listener for send verification email button
+    const sendVerificationBtn = document.getElementById('send-verification-btn');
+    if (sendVerificationBtn) {
+      sendVerificationBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.sendVerificationEmail();
+      });
+    }
   }
 }
 
