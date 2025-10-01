@@ -56,6 +56,7 @@ class ServicesManager {
               `<button data-action="deactivate" data-service-id="${service.id}" class="btn-delete" data-translate="deactivate">Deactivate</button>` :
               `<button data-action="activate" data-service-id="${service.id}" class="btn-activate" data-translate="activate">Activate</button>`
             }
+            <button data-action="delete-permanent" data-service-id="${service.id}" class="btn-delete" data-translate="delete">Delete</button>
           </td>
         </tr>
       `;
@@ -107,6 +108,19 @@ class ServicesManager {
           this.activateService(serviceId);
         } else {
           console.error('Invalid service ID or activateService method not available');
+        }
+      });
+    });
+
+    // Bind permanent delete buttons
+    const deleteButtons = document.querySelectorAll('[data-action="delete-permanent"]');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        const serviceId = parseInt(e.target.getAttribute('data-service-id'));
+        if (!isNaN(serviceId) && this.deleteServicePermanently) {
+          this.deleteServicePermanently(serviceId);
+        } else {
+          console.error('Invalid service ID or deleteServicePermanently method not available');
         }
       });
     });
@@ -171,7 +185,8 @@ class ServicesManager {
   }
 
   async deactivateService(serviceId) {
-    if (confirm('Are you sure you want to deactivate this service?')) {
+    const msg = (window.t && window.t('confirm_deactivate_service')) || 'Are you sure you want to deactivate this service?';
+    if (confirm(msg)) {
       try {
         const response = await fetch(`/api/admin/services/${serviceId}`, {
           method: 'DELETE'
@@ -193,7 +208,8 @@ class ServicesManager {
   }
 
   async activateService(serviceId) {
-    if (confirm('Are you sure you want to activate this service?')) {
+    const msg = (window.t && window.t('confirm_activate_service')) || 'Are you sure you want to activate this service?';
+    if (confirm(msg)) {
       try {
         // Get current service data
         const response = await fetch(`/api/admin/services`);
@@ -243,6 +259,26 @@ class ServicesManager {
     }
   }
 
+  async deleteServicePermanently(serviceId) {
+    const msg = (window.t && window.t('confirm_delete_service')) || 'Permanently delete this service? This cannot be undone. If the service has related active bookings, deletion will be blocked.';
+    if (!confirm(msg)) return;
+
+    try {
+      const response = await fetch(`/api/admin/services/${serviceId}/permanent`, { method: 'DELETE' });
+      const data = await response.json();
+      if (data.success) {
+        await this.loadServices();
+        this.adminManager.showSuccessMessage('Service deleted permanently');
+      } else {
+        // Show specific error message from server
+        alert(data.error || 'Deletion failed');
+      }
+    } catch (error) {
+      console.error('Permanent delete service error:', error);
+      alert('Request failed');
+    }
+  }
+
   async handleServiceSubmit(e) {
     e.preventDefault();
     
@@ -263,17 +299,14 @@ class ServicesManager {
     };
 
     try {
-      let response;
-      
+      let response, data;
       if (serviceId) {
-        // Update existing service
         response = await fetch(`/api/admin/services/${serviceId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
         });
       } else {
-        // Create new service
         response = await fetch('/api/admin/services', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -281,17 +314,17 @@ class ServicesManager {
         });
       }
 
-      const data = await response.json();
-      
+      data = await response.json();
+
       if (data.success) {
         document.getElementById('service-modal').style.display = 'none';
         await this.loadServices();
         this.adminManager.showSuccessMessage(serviceId ? 'Service updated successfully' : 'Service created successfully');
       } else {
-        alert(data.error || 'Operation failed');
+        alert(data.error || 'Save failed');
       }
     } catch (error) {
-      console.error('Service submit error:', error);
+      console.error('Service save error:', error);
       alert('Request failed');
     }
   }
