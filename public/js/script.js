@@ -195,16 +195,54 @@ document.addEventListener('languageChanged', () => {
   loadServices();
 });
 
+// Auto-fill user information when auth status is confirmed
+document.addEventListener('authStatusChecked', () => {
+  // Auto-fill user info if logged in
+  autoFillUserInfo();
+});
+
+// Auto-fill user information if logged in
+function autoFillUserInfo() {
+  // Only run on booking page
+  if (!document.getElementById('booking-form')) return;
+  
+  // Check if user is logged in
+  if (window.currentUser) {
+    const nameField = document.getElementById('name');
+    const phoneField = document.getElementById('phone');
+    
+    // Fill name field if empty
+    if (nameField && !nameField.value) {
+      nameField.value = `${window.currentUser.first_name} ${window.currentUser.last_name}`;
+    }
+    
+    // Fill phone field if empty and phone info is available
+    if (phoneField && !phoneField.value && window.currentUser.phone) {
+      phoneField.value = window.currentUser.phone;
+    }
+  }
+}
+
 // 处理预约表单提交（仅在 booking.html 中触发）
 if (document.getElementById('booking-form')) {
   document.getElementById('booking-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Check if user is logged in
-    if (!window.currentUser) {
-      alert(window.t ? window.t('login_required') : 'Please login to complete your booking');
-      window.location.href = 'login.html';
-      return;
+    // Check if user is logged in using authManager if available
+    if (window.authManager) {
+      // If authManager exists but user is not authenticated, redirect to login
+      if (!window.authManager.currentUser) {
+        alert(window.t ? window.t('login_required') : 'Please login to complete your booking');
+        window.location.href = 'login.html';
+        return;
+      }
+    } else {
+      // Fallback to window.currentUser if authManager is not available
+      if (!window.currentUser) {
+        alert(window.t ? window.t('login_required') : 'Please login to complete your booking');
+        window.location.href = 'login.html';
+        return;
+      }
     }
 
     const name = document.getElementById('name').value.trim();
@@ -240,7 +278,7 @@ if (document.getElementById('booking-form')) {
       
       const data = await response.json();
       
-      if (data.success) {
+      if (response.ok && data.success) {
         // Show payment modal if service has a price
         if (data.service_price > 0) {
           showPaymentModal({
@@ -260,6 +298,9 @@ if (document.getElementById('booking-form')) {
             window.location.href = 'profile.html';
           }, 2000);
         }
+      } else if (response.status === 403) {
+        // Email not verified
+        alert(data.error || (window.t ? window.t('email_not_verified_booking') : 'Please verify your email address before making bookings.'));
       } else {
         alert('Booking failed: ' + (data.error || 'Unknown error'));
       }
@@ -310,6 +351,7 @@ function initializePaymentModal() {
   const modal = document.getElementById('payment-modal');
   const closeBtn = document.getElementById('payment-close');
   const confirmBtn = document.getElementById('confirm-payment-btn');
+  const counterBtn = document.getElementById('checkout-counter-btn');
   const cancelBtn = document.getElementById('cancel-payment-btn');
   
   if (!modal) return;
@@ -346,7 +388,7 @@ function initializePaymentModal() {
       const paymentData = await paymentResponse.json();
       
       if (paymentData.success) {
-        alert(window.t ? window.t('payment_successful') : 'Payment successful! Transaction ID: ' + paymentData.payment.transaction_id);
+        alert(window.t('payment_successful') || 'Payment successful! Transaction ID: ' + paymentData.payment.transaction_id);
         hidePaymentModal();
         
         // Reset form and redirect
@@ -363,6 +405,43 @@ function initializePaymentModal() {
     } finally {
       confirmBtn.disabled = false;
       confirmBtn.textContent = window.t ? window.t('confirm_payment') : 'Confirm Payment';
+    }
+  });
+  
+  // Checkout at the counter
+  counterBtn.addEventListener('click', async () => {
+    const bookingId = modal.dataset.bookingId;
+    
+    try {
+      counterBtn.disabled = true;
+      counterBtn.textContent = window.t ? window.t('loading') : 'Processing...';
+      
+      // Update booking status to indicate counter checkout
+      const response = await fetch(`/api/bookings/${bookingId}/counter-checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert(window.t('checkout_counter_success') || 'Booking confirmed! Please complete your payment at the counter.');
+        hidePaymentModal();
+        
+        // Reset form and redirect to home page
+        document.getElementById('booking-form').reset();
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      } else {
+        alert('Checkout failed: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Checkout request failed.');
+    } finally {
+      counterBtn.disabled = false;
+      counterBtn.textContent = window.t ? window.t('checkout_counter') : 'Checkout at the Counter';
     }
   });
 }
