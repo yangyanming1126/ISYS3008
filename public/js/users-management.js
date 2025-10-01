@@ -61,6 +61,7 @@ class UsersManager {
               `<button onclick="window.adminManager.usersManager.deactivateUser(${user.id})" class="btn-delete" data-translate="deactivate">Deactivate</button>` :
               `<button onclick="window.adminManager.usersManager.activateUser(${user.id})" class="btn-activate" data-translate="activate">Activate</button>`
             }
+            <button onclick="window.adminManager.usersManager.deleteUser(${user.id})" class="btn-delete" data-translate="delete">Delete</button>
           </td>
         </tr>
       `;
@@ -104,7 +105,6 @@ class UsersManager {
         document.getElementById('user-last-name').value = user.last_name;
         document.getElementById('user-phone').value = user.phone || '';
         document.getElementById('user-role').value = user.role;
-        document.getElementById('user-language').value = user.preferred_language;
         document.getElementById('user-password').required = false;
       }
     } catch (error) {
@@ -122,8 +122,7 @@ class UsersManager {
       first_name: document.getElementById('user-first-name').value,
       last_name: document.getElementById('user-last-name').value,
       phone: document.getElementById('user-phone').value,
-      role: document.getElementById('user-role').value,
-      preferred_language: document.getElementById('user-language').value
+      role: document.getElementById('user-role').value
     };
     
     const password = document.getElementById('user-password').value;
@@ -213,7 +212,6 @@ class UsersManager {
           last_name: user.last_name,
           phone: user.phone,
           role: user.role,
-          preferred_language: user.preferred_language,
           is_active: true
         };
         
@@ -236,6 +234,29 @@ class UsersManager {
         console.error('Activate user error:', error);
         alert('Request failed');
       }
+    }
+  }
+
+  async deleteUser(userId) {
+    // Use translated confirm message if available
+    const confirmMsg = (window.t && window.t('confirm_delete_user')) || 'Are you sure you want to permanently delete this user? This action cannot be undone.';
+    if (!confirm(confirmMsg)) return;
+
+    try {
+      const response = await fetch(`/api/admin/users/${userId}/permanent`, {
+        method: 'DELETE'
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        await this.loadUsers();
+        this.adminManager.showSuccessMessage('User deleted successfully');
+      } else {
+        alert(data.error || 'Deletion failed');
+      }
+    } catch (error) {
+      console.error('Delete user error:', error);
+      alert('Request failed');
     }
   }
 }
