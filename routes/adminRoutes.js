@@ -105,10 +105,13 @@ router.get('/bookings', requireAdmin, async (req, res) => {
   try {
     const [bookings] = await db.query(`
       SELECT b.*, u.username, u.first_name, u.last_name, u.email,
-             COALESCE(s.name_en, s.name_cn, s.name_ru) as service_name, s.price as service_price
+             COALESCE(s.name_en, s.name_cn, s.name_ru) as service_name, s.price as service_price,
+             p.payment_method
       FROM bookings b
-      JOIN users u ON b.user_id = u.id
-      JOIN services s ON b.service_id = s.id
+      LEFT JOIN users u ON b.user_id = u.id
+      LEFT JOIN services s ON b.service_id = s.id
+      LEFT JOIN payments p ON b.payment_id = p.id
+      WHERE b.is_active = TRUE
       ORDER BY b.created_at DESC
     `);
     
@@ -306,6 +309,85 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
   } catch (error) {
     console.error('Service deactivation error:', error);
     res.status(500).json({ error: 'Failed to deactivate service' });
+  }
+});
+
+// Permanently delete service (Admin only)
+router.delete('/services/:id/permanent', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    // First check if there are any active bookings for this service
+    const [bookings] = await db.query(
+      'SELECT COUNT(*) as count FROM bookings WHERE service_id = ? AND is_active = TRUE', 
+      [id]
+    );
+    
+    if (bookings[0].count > 0) {
+      return res.status(409).json({ 
+        error: 'Cannot delete service with existing active bookings. Please deactivate it instead.' 
+      });
+    }
+    
+    // If no active bookings, proceed with deletion
+    const [result] = await db.query('DELETE FROM services WHERE id = ?', [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+
+    res.json({ success: true, message: 'Service deleted permanently' });
+  } catch (error) {
+    // MySQL FK constraint error (ER_ROW_IS_REFERENCED_2)
+    if (error && (error.code === 'ER_ROW_IS_REFERENCED_2' || error.errno === 1451)) {
+      return res.status(409).json({ error: 'Cannot delete service with existing bookings. Please deactivate it instead.' });
+    }
+    console.error('Service permanent deletion error:', error);
+    res.status(500).json({ error: 'Failed to delete service permanently' });
+  }
+});
+
+// Permanently delete user (Admin only)
+router.delete('/users/:id/permanent', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+
+  // Prevent admin from deleting themselves
+  if (parseInt(id) === req.session.user.id) {
+    return res.status(400).json({ error: 'Cannot delete your own account' });
+  }
+
+  try {
+    const [result] = await db.query('DELETE FROM users WHERE id = ?', [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ success: true, message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('User deletion error:', error);
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
+
+// Delete booking (soft delete - Admin only)
+router.delete('/bookings/:id', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Soft delete: set is_active to FALSE
+    const [result] = await db.query(
+      'UPDATE bookings SET is_active = FALSE WHERE id = ?',
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    res.json({ success: true, message: 'Booking deleted successfully' });
+  } catch (error) {
+    console.error('Booking deletion error:', error);
+    res.status(500).json({ error: 'Failed to delete booking' });
   }
 });
 

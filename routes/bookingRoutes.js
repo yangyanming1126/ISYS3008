@@ -11,6 +11,20 @@ function requireAuth(req, res, next) {
   }
 }
 
+// Email verification middleware
+async function requireVerifiedEmail(req, res, next) {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  // Check if user's email is verified
+  if (!req.session.user.is_email_verified) {
+    return res.status(403).json({ error: 'Please verify your email address before making bookings' });
+  }
+
+  next();
+}
+
 // Admin authorization middleware
 function requireAdmin(req, res, next) {
   if (req.session && req.session.user && req.session.user.role === 'admin') {
@@ -21,7 +35,7 @@ function requireAdmin(req, res, next) {
 }
 
 // Create booking (supports both logged-in users and guests)
-router.post('/', async (req, res) => {
+router.post('/', requireVerifiedEmail, async (req, res) => {
   const { name, phone, date, service_id, notes } = req.body;
   const user_id = req.session.user ? req.session.user.id : null;
 
@@ -69,7 +83,7 @@ router.get('/my', requireAuth, async (req, res) => {
       FROM bookings b 
       JOIN services s ON b.service_id = s.id 
       LEFT JOIN payments p ON b.payment_id = p.id
-      WHERE b.user_id = ? 
+      WHERE b.user_id = ? AND b.is_active = TRUE
       ORDER BY b.date DESC, b.created_at DESC
     `, [req.session.user.id]);
     
@@ -91,6 +105,7 @@ router.get('/', requireAdmin, async (req, res) => {
       LEFT JOIN users u ON b.user_id = u.id
       JOIN services s ON b.service_id = s.id 
       LEFT JOIN payments p ON b.payment_id = p.id
+      WHERE b.is_active = TRUE
       ORDER BY b.date DESC, b.created_at DESC
     `);
     
@@ -106,7 +121,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { status, notes } = req.body;
   
-  const validStatuses = ['pending', 'confirmed', 'cancelled', 'completed'];
+  const validStatuses = ['pending', 'confirmed', 'cancelled', 'completed', 'refunded'];
   if (!validStatuses.includes(status)) {
     return res.status(400).json({ error: 'Invalid status' });
   }
@@ -125,6 +140,50 @@ router.put('/:id', requireAdmin, async (req, res) => {
   } catch (error) {
     console.error('Booking update error:', error);
     res.status(500).json({ error: 'Failed to update booking' });
+  }
+});
+
+// Delete booking (soft delete - Admin only)
+router.delete('/:id', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    // Soft delete: set is_active to FALSE
+    const [result] = await db.query(
+      'UPDATE bookings SET is_active = FALSE WHERE id = ?',
+      [id]
+    );
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+    
+    res.json({ success: true, message: 'Booking deleted successfully' });
+  } catch (error) {
+    console.error('Booking deletion error:', error);
+    res.status(500).json({ error: 'Failed to delete booking' });
+  }
+});
+
+// Checkout at the counter (Update booking status for counter payment)
+router.post('/:id/counter-checkout', requireAuth, async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    // Update booking status to 'confirmed' for counter checkout
+    const [result] = await db.query(
+      'UPDATE bookings SET status = ? WHERE id = ? AND (user_id = ? OR ? = (SELECT role FROM users WHERE id = ?))',
+      ['confirmed', id, req.session.user.id, 'admin', req.session.user.id]
+    );
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Booking not found or access denied' });
+    }
+    
+    res.json({ success: true, message: 'Booking confirmed for counter checkout' });
+  } catch (error) {
+    console.error('Counter checkout error:', error);
+    res.status(500).json({ error: 'Failed to process counter checkout' });
   }
 });
 
