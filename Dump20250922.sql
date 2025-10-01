@@ -25,25 +25,27 @@ DROP TABLE IF EXISTS `bookings`;
 CREATE TABLE `bookings` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `date` date NOT NULL,
   `service_id` int NOT NULL,
   `payment_id` int DEFAULT NULL,
-  `status` enum('pending','confirmed','cancelled','completed','refunded') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
-  `notes` text COLLATE utf8mb4_unicode_ci,
+  `status` enum('pending','confirmed','cancelled','completed','refunded') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
+  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_active` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `payment_id` (`payment_id`),
   KEY `idx_bookings_date` (`date`),
   KEY `idx_bookings_service_id` (`service_id`),
   KEY `idx_bookings_status` (`status`),
   KEY `idx_bookings_user_date` (`user_id`,`date`),
+  KEY `idx_bookings_active` (`is_active`),
   CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE RESTRICT,
   CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `bookings_ibfk_3` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,7 +54,7 @@ CREATE TABLE `bookings` (
 
 LOCK TABLES `bookings` WRITE;
 /*!40000 ALTER TABLE `bookings` DISABLE KEYS */;
-INSERT INTO `bookings` VALUES (1,1,'Admin Test Booking','+61 400 000 000','2025-01-15',1,6,'refunded','Test booking by admin','2025-09-04 09:48:49','2025-09-10 04:56:26'),(2,NULL,'John Smith','+61 400 123 456','2025-01-20',5,NULL,'pending','First time fishing','2025-09-04 09:48:49','2025-09-04 09:48:49'),(3,NULL,'The Williams Family','+61 400 345 678','2025-01-25',3,NULL,'confirmed','Family vacation with 2 children','2025-09-04 09:48:49','2025-09-04 09:48:49'),(4,2,'sdfs','1233323123','2025-09-27',1,2,'confirmed','Additional Notes (Optional)','2025-09-06 00:04:20','2025-09-06 00:06:34'),(5,2,'sdfs','1233323123','2025-09-19',3,1,'completed','Additional Notes (Optional)','2025-09-06 00:05:53','2025-09-10 07:27:09'),(6,2,'sdfs','1233323123','2025-09-14',8,3,'completed','Additional Notes (Optional)','2025-09-06 00:06:50','2025-09-10 04:19:48'),(7,2,'liuzg50505','123123123','2025-09-27',2,4,'completed','附加说明（可选）','2025-09-10 03:32:49','2025-09-10 04:19:45'),(8,2,'111','222','2025-09-20',2,5,'completed','附加说明（可选）','2025-09-10 03:47:37','2025-09-10 04:14:50'),(9,1,'111','222','2025-09-20',2,7,'refunded','附加说明（可选）','2025-09-10 04:54:00','2025-09-10 04:56:14');
+INSERT INTO `bookings` VALUES (1,1,'Admin Test Booking','+61 400 000 000','2025-01-15',1,6,'refunded','Test booking by admin','2025-09-04 09:48:49','2025-09-10 04:56:26',1),(2,NULL,'John Smith','+61 400 123 456','2025-01-20',5,NULL,'pending','First time fishing','2025-09-04 09:48:49','2025-09-04 09:48:49',1),(3,NULL,'The Williams Family','+61 400 345 678','2025-01-25',3,NULL,'confirmed','Family vacation with 2 children','2025-09-04 09:48:49','2025-09-04 09:48:49',1),(4,2,'sdfs','1233323123','2025-09-27',1,2,'confirmed','Additional Notes (Optional)','2025-09-06 00:04:20','2025-09-06 00:06:34',1),(5,2,'sdfs','1233323123','2025-09-19',3,1,'completed','Additional Notes (Optional)','2025-09-06 00:05:53','2025-09-10 07:27:09',1),(6,2,'sdfs','1233323123','2025-09-14',8,3,'completed','Additional Notes (Optional)','2025-09-06 00:06:50','2025-09-10 04:19:48',1),(7,2,'liuzg50505','123123123','2025-09-27',2,4,'completed','附加说明（可选）','2025-09-10 03:32:49','2025-09-10 04:19:45',1),(8,2,'111','222','2025-09-20',2,5,'completed','附加说明（可选）','2025-09-10 03:47:37','2025-09-10 04:14:50',1),(9,1,'111','222','2025-09-20',2,7,'refunded','附加说明（可选）','2025-09-10 04:54:00','2025-09-10 04:56:14',1),(10,1,'liuzg50505','15640164908','2025-09-27',4,NULL,'confirmed','Additional Notes (Optional)','2025-09-18 04:32:17','2025-09-18 04:32:19',1),(11,1,'liuzg50505','1233323123','2025-09-28',4,NULL,'confirmed','Additional Notes (Optional)','2025-09-18 04:32:55','2025-09-18 04:32:58',1);
 /*!40000 ALTER TABLE `bookings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,10 +69,10 @@ CREATE TABLE `payments` (
   `id` int NOT NULL AUTO_INCREMENT,
   `booking_id` int DEFAULT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `currency` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT 'AUD',
-  `payment_method` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'virtual',
-  `transaction_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('pending','completed','failed','refunded') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
+  `currency` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'AUD',
+  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'virtual',
+  `transaction_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('pending','completed','failed','refunded') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
   `processed_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -101,17 +103,17 @@ DROP TABLE IF EXISTS `services`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `services` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name_cn` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name_en` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name_ru` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description_cn` text COLLATE utf8mb4_unicode_ci,
-  `description_en` text COLLATE utf8mb4_unicode_ci,
-  `description_ru` text COLLATE utf8mb4_unicode_ci,
+  `name_cn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name_en` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name_ru` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description_cn` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `description_en` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `description_ru` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `price` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `category_cn` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `category_en` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `category_ru` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `image_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `category_cn` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `category_en` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `category_ru` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -141,13 +143,16 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('admin','user') COLLATE utf8mb4_unicode_ci DEFAULT 'user',
-  `first_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_email_verified` tinyint(1) DEFAULT '0',
+  `email_verification_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email_verification_token_expires` datetime DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('admin','user') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'user',
+  `first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -160,8 +165,10 @@ CREATE TABLE `users` (
   KEY `idx_email` (`email`),
   KEY `idx_role` (`role`),
   KEY `idx_active` (`is_active`),
+  KEY `idx_is_email_verified` (`is_email_verified`),
+  KEY `idx_email_verification_token` (`email_verification_token`),
   CONSTRAINT `users_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,7 +177,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','admin@sleepytiger.com','admin123','admin','System','Administrator',NULL,1,'2025-09-04 09:48:49','2025-09-04 09:48:49',NULL),(2,'alice123','alice123@gmail.com','123456','user','zg12','liu12322','12312312322',1,'2025-09-06 00:03:52','2025-09-16 02:58:37',NULL);
+INSERT INTO `users` VALUES (1,'admin','admin@sleepytiger.com',0,NULL,NULL,'admin123','admin','System','Administrator',NULL,1,'2025-09-04 09:48:49','2025-09-04 09:48:49',NULL),(2,'alice123','alice123@gmail.com',0,NULL,NULL,'123456','user','zg12','liu12322','12312312322',1,'2025-09-06 00:03:52','2025-09-16 02:58:37',NULL),(4,'cindy','cindy@gmail.com',0,NULL,NULL,'123456','user','cindy','wang','+8613812345678',1,'2025-09-18 05:32:24','2025-09-18 05:32:24',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -183,4 +190,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-16 11:01:15
+-- Dump completed on 2025-09-22  7:19:01
