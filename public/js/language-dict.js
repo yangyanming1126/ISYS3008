@@ -180,10 +180,45 @@ const LANGUAGE_DICT = {
     cn: '姓氏',
     ru: 'Фамилия'
   },
-  phone_label: {
-    en: 'Phone Number',
-    cn: '电话号码',
-    ru: 'Номер телефона'
+  select_country: {
+    en: 'Select Country',
+    cn: '选择国家',
+    ru: 'Выберите страну'
+  },
+  country_au: {
+    en: 'Australia',
+    cn: '澳大利亚',
+    ru: 'Австралия'
+  },
+  country_cn: {
+    en: 'China',
+    cn: '中国',
+    ru: 'Китай'
+  },
+  country_ru: {
+    en: 'Russia',
+    cn: '俄罗斯',
+    ru: 'Россия'
+  },
+  phone_format_error: {
+    en: 'Please enter a valid phone number for the selected country',
+    cn: '请输入所选国家的有效电话号码',
+    ru: 'Пожалуйста, введите действительный номер телефона для выбранной страны'
+  },
+  phone_hint_au: {
+    en: 'Australian phone number (10 digits, e.g., 0400123456)',
+    cn: '澳大利亚电话号码（10位数字，例如0400123456）',
+    ru: 'Австралийский номер телефона (10 цифр, например, 0400123456)'
+  },
+  phone_hint_cn: {
+    en: 'Chinese phone number (11 digits, e.g., 13812345678)',
+    cn: '中国电话号码（11位数字，例如13812345678）',
+    ru: 'Китайский номер телефона (11 цифр, например, 13812345678)'
+  },
+  phone_hint_ru: {
+    en: 'Russian phone number (10 digits, e.g., 9123456789)',
+    cn: '俄罗斯电话号码（10位数字，例如9123456789）',
+    ru: 'Российский номер телефона (10 цифр, например, 9123456789)'
   },
   language_preference: {
     en: 'Language Preference',
@@ -268,6 +303,16 @@ const LANGUAGE_DICT = {
     en: 'Confirm Payment',
     cn: '确认支付',
     ru: 'Подтвердить оплату'
+  },
+  checkout_counter: {
+    en: 'Checkout at the Counter',
+    cn: '在前台结账',
+    ru: 'Оплата на стойке'
+  },
+  checkout_counter_success: {
+    en: 'Booking confirmed! ',
+    cn: '预订已确认！',
+    ru: 'Бронирование подтверждено!'
   },
   login_required: {
     en: 'Please login to complete your booking',
@@ -896,6 +941,97 @@ const LANGUAGE_DICT = {
     en: 'No users found',
     cn: '未找到用户',
     ru: 'Пользователи не найдены'
+  },
+  username_email_label: {
+    en: 'Username or Email',
+    cn: '用户名或邮箱',
+    ru: 'Имя пользователя или электронная почта'
+  },
+  select_country: {
+    en: 'Select Country',
+    cn: '选择国家',
+    ru: 'Выберите страну'
+  },
+  country_au: {
+    en: 'Australia',
+    cn: '澳大利亚',
+    ru: 'Австралия'
+  },
+  country_cn: {
+    en: 'China',
+    cn: '中国',
+    ru: 'Китай'
+  },
+  country_ru: {
+    en: 'Russia',
+    cn: '俄罗斯',
+    ru: 'Россия'
+  },
+  phone_format_error: {
+    en: 'Please enter a valid phone number for the selected country',
+    cn: '请输入所选国家的有效电话号码',
+    ru: 'Пожалуйста, введите действительный номер телефона для выбранной страны'
+  },
+  phone_hint_au: {
+    en: 'Australian phone number (10 digits, e.g., 0400123456 or +61400123456)',
+    cn: '澳大利亚电话号码（10位数字，例如0400123456或+61400123456）',
+    ru: 'Австралийский номер телефона (10 цифр, например, 0400123456 или +61400123456)'
+  },
+  phone_hint_cn: {
+    en: 'Chinese phone number (11 digits, e.g., 13812345678 or +8613812345678)',
+    cn: '中国电话号码（11位数字，例如13812345678或+8613812345678）',
+    ru: 'Китайский номер телефона (11 цифр, например, 13812345678 или +8613812345678)'
+  },
+  phone_hint_ru: {
+    en: 'Russian phone number (10 digits, e.g., 9123456789 or +79123456789)',
+    cn: '俄罗斯电话号码（10位数字，例如9123456789或+79123456789）',
+    ru: 'Российский номер телефона (10 цифр, например, 9123456789 или +79123456789)'
+  },
+  
+  // Email Verification
+  email_verified: {
+    en: 'Your email is verified',
+    cn: '您的邮箱已验证',
+    ru: 'Ваша электронная почта подтверждена'
+  },
+  email_not_verified: {
+    en: 'Your email is not verified',
+    cn: '您的邮箱未验证',
+    ru: 'Ваша электронная почта не подтверждена'
+  },
+  send_verification_email: {
+    en: 'Send Verification Email',
+    cn: '发送验证邮件',
+    ru: 'Отправить письмо с подтверждением'
+  },
+  sending_verification: {
+    en: 'Sending...',
+    cn: '发送中...',
+    ru: 'Отправка...'
+  },
+  verification_sent: {
+    en: 'Verification email sent successfully! Please check your inbox.',
+    cn: '验证邮件发送成功！请检查您的收件箱。',
+    ru: 'Письмо с подтверждением успешно отправлено! Пожалуйста, проверьте ваш почтовый ящик.'
+  },
+  verification_failed: {
+    en: 'Failed to send verification email',
+    cn: '发送验证邮件失败',
+    ru: 'Не удалось отправить письмо с подтверждением'
+  },
+  
+  // Email verification for bookings
+  email_not_verified_bookings: {
+    en: 'Please verify your email to access your bookings.',
+    cn: '请验证您的邮箱以访问您的预订。',
+    ru: 'Пожалуйста, подтвердите вашу электронную почту, чтобы получить доступ к вашим бронированиям.'
+  },
+  
+  // Email verification for booking submission
+  email_not_verified_booking: {
+    en: 'Please verify your email address before making bookings.',
+    cn: '请验证您的邮箱地址后再进行预订。',
+    ru: 'Пожалуйста, подтвердите вашу электронную почту перед бронированием.'
   }
 };
 
@@ -961,9 +1097,9 @@ class LanguageManager {
     switcher.className = 'language-switcher';
     switcher.innerHTML = `
       <select id="language-select" class="language-select">
-        <option value="en" ${this.currentLanguage === 'en' ? 'selected' : ''}>🇬🇧 English</option>
-        <option value="cn" ${this.currentLanguage === 'cn' ? 'selected' : ''}>🇨🇳 中文</option>
-        <option value="ru" ${this.currentLanguage === 'ru' ? 'selected' : ''}>🇷🇺 Русский</option>
+        <option value="en" ${this.currentLanguage === 'en' ? 'selected' : ''}>en English</option>
+        <option value="cn" ${this.currentLanguage === 'cn' ? 'selected' : ''}>cn 中文</option>
+        <option value="ru" ${this.currentLanguage === 'ru' ? 'selected' : ''}>ru Русский</option>
       </select>
     `;
 
