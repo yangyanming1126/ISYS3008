@@ -97,14 +97,27 @@
           />
         </div>
         
-        <div class="form-group">
-          <input 
-            type="tel" 
-            id="phone" 
-            data-translate="phone_label"
-            placeholder="Phone Number" 
-          />
+        <div class="form-row">
+          <div class="form-group">
+            <select id="country" data-translate="country_label" required>
+              <option value="" data-translate="select_country">Select Country</option>
+              <option value="AU">Australia (+61)</option>
+              <option value="CN">China (+86)</option>
+              <option value="RU">Russia (+7)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <input 
+              type="tel" 
+              id="phone" 
+              data-translate="phone_label"
+              placeholder="Phone Number" 
+              required
+            />
+          </div>
         </div>
+        <small id="phone-format-hint" class="phone-hint"></small>
         
         <button type="submit" class="btn-primary" data-translate="register_button">
           Register
