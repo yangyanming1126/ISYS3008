@@ -55,8 +55,19 @@ class BookingsManager {
         actionButtons = `<button class="btn-view" data-booking-id="${booking.id}" data-translate="view">View</button>`;
       }
       
+      // Always include Delete button for admins
+      actionButtons += `\n<button class="btn-delete" data-booking-id="${booking.id}" data-translate="delete">Delete</button>`;
+      
       // Get status translation key
       const statusKey = `status_${booking.status}`;
+      
+      // Add payment method information if available
+      let paymentInfo = '';
+      if (booking.payment_method) {
+        paymentInfo = `<br><small>Payment: ${booking.payment_method}</small>`;
+      } else if (booking.status === 'confirmed') {
+        paymentInfo = '<br><small>Payment: At Counter</small>';
+      }
       
       return `
         <tr>
@@ -65,6 +76,7 @@ class BookingsManager {
             ${booking.name}<br>
             <small>${booking.phone}</small>
             ${booking.username ? `<br><small data-translate="username_label">User</small>: ${booking.username}</small>` : ''}
+            ${paymentInfo}
           </td>
           <td>${booking.service_name}</td>
           <td>${this.adminManager.formatDate(booking.date)}</td>
@@ -142,6 +154,21 @@ class BookingsManager {
           this.completeBooking(bookingId);
         } else {
           console.error('Invalid booking ID or completeBooking method not available');
+        }
+      });
+    });
+
+    // Bind delete buttons
+    const deleteButtons = document.querySelectorAll('.btn-delete');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        // Only handle delete buttons with data-booking-id
+        if (!e.target.hasAttribute('data-booking-id')) return;
+        const bookingId = parseInt(e.target.getAttribute('data-booking-id'));
+        if (!isNaN(bookingId) && this.deleteBooking) {
+          this.deleteBooking(bookingId);
+        } else {
+          console.error('Invalid booking ID or deleteBooking method not available');
         }
       });
     });
@@ -384,6 +411,28 @@ class BookingsManager {
       }
     } catch (error) {
       console.error('Booking completion error:', error);
+      alert('Request failed');
+    }
+  }
+
+  async deleteBooking(bookingId) {
+    const confirmMsg = (window.t && window.t('confirm_delete_booking')) || 'Are you sure you want to delete this booking? This action cannot be undone.';
+    if (!confirm(confirmMsg)) return;
+
+    try {
+      const response = await fetch(`/api/admin/bookings/${bookingId}`, {
+        method: 'DELETE'
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        await this.loadBookings();
+        this.adminManager.showSuccessMessage('Booking deleted successfully');
+      } else {
+        alert(data.error || 'Deletion failed');
+      }
+    } catch (error) {
+      console.error('Delete booking error:', error);
       alert('Request failed');
     }
   }
